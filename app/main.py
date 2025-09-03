@@ -1,0 +1,23 @@
+from typing import Union
+
+from fastapi import FastAPI
+from app.api.v1.auth import auth_router
+
+app = FastAPI()
+
+app.include_router(auth_router.router)
+
+
+
+# source .venv/bin/activate
+# uv add "fastapi[standard]"
+# uv run fastapi dev app/main.py --host 192.168.0.103 --port 8000
+# for production
+# uv sync --frozen --no-cache
+
+# uv add psycopg2-binary
+# uv add sqlalchemy
+# uv add alembic
+# alembic init alembic
+# uv run alembic revision --autogenerate -m "Initial migration"
+# uv run alembic upgrade head
