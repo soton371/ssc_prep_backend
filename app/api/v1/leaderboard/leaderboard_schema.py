@@ -9,8 +9,9 @@ class LeaderboardCreate(BaseModel):
     
 
 # For responses
-class LeaderboardResponse(LeaderboardCreate):
+class LeaderboardResponse(BaseModel):
     id: int
+    points: int
     rank: int
     month: str
     user: UserResponse

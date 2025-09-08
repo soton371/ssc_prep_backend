@@ -13,5 +13,5 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    user = relationship("Leaderboard", back_populates="user")
+    leaderboards = relationship("Leaderboard", back_populates="user")
 

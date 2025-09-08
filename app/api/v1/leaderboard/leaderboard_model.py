@@ -14,3 +14,4 @@ class Leaderboard(Base):
     user = relationship("User", back_populates="leaderboards")
 
 
+#test korte hobe create er jonno
