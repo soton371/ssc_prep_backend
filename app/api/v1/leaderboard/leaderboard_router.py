@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException
 from app.db.session import get_db
 from app.api.v1.leaderboard import leaderboard_service
 from app.api.v1.leaderboard.leaderboard_schema import LeaderboardCreate, LeaderboardResponse
@@ -18,3 +18,18 @@ def create_leaderboard_entry(leaderboard_data: LeaderboardCreate, db: Session = 
         return db_entry
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+
+
+# for get leaderboard entries for the current month
+@router.get("/", response_model=List[LeaderboardResponse])
+def get_leaderboard_by_current_month(db: Session = Depends(get_db), skip: int = 0, limit: int = 50):
+    try:
+        db_entry = leaderboard_service.get_leaderboard_for_current_month(db= db, skip=skip, limit=limit)
+        if not db_entry:
+            raise HTTPException(status_code=404, detail="Leaderboard entry not found")
+        return db_entry
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+

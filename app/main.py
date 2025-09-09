@@ -13,7 +13,7 @@ app.include_router(leaderboard_router.router)
 
 # source .venv/bin/activate
 # uv add "fastapi[standard]"
-# uv run fastapi dev app/main.py --host 192.168.1.109 --port 8000
+# uv run fastapi dev app/main.py --host 192.168.1.103 --port 8000
 # for production
 # uv sync --frozen --no-cache
 
