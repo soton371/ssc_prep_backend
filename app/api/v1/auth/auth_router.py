@@ -31,3 +31,12 @@ def login_or_register(user: UserCreate, db: Session = Depends(get_db)) -> Dict[s
         }
     except Exception as e:
         return {"error": str(e)}
+
+
+#get user by id
+@router.get("/user/{user_id}", response_model=UserResponse)
+def get_user_by_id(user_id: int, db: Session = Depends(get_db)) -> UserResponse:
+    db_user = auth_service.get_user_by_id(db, user_id)
+    if db_user is None:
+        return {"error": "User not found"}
+    return UserResponse.model_validate(db_user)
