@@ -18,3 +18,15 @@ class LeaderboardResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# For responses by user_id
+class LeaderboardUserResponse(BaseModel):
+    id: int
+    points: int
+    rank: int
+    month: str
+
+    class Config:
+        from_attributes = True
+
