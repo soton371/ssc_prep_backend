@@ -19,3 +19,10 @@ class UserResponse(UserCreate):
         from_attributes = True
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: Optional[str] = "bearer"
+
+
+class TokenData(BaseModel):
+    id: Optional[int] = None

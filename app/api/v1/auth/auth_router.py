@@ -22,12 +22,12 @@ router = APIRouter(
 def login_or_register(user: UserCreate, db: Session = Depends(get_db)) -> Dict[str, Any]:
 
     try:
-        db_user, access_token = auth_service.login_or_register_user(db, user)
+        db_user, token = auth_service.login_or_register_user(db, user)
 
         return {
             "data": UserResponse.model_validate(db_user).model_dump(),
-            "access_token": access_token,
-            "token_type": "bearer",
+            "access_token": token.access_token,
+            "token_type": token.token_type or "bearer",
         }
     except Exception as e:
         return {"error": str(e)}
@@ -40,3 +40,5 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)) -> UserResponse:
     if db_user is None:
         return {"error": "User not found"}
     return UserResponse.model_validate(db_user)
+
+#1. give auth token then get user details

@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 from sqlalchemy.orm import Session
 from app.api.v1.auth.auth_model import User
-from app.api.v1.auth.auth_schema import UserCreate, UserUpdate, UserResponse
+from app.api.v1.auth.auth_schema import UserCreate, UserUpdate, UserResponse, Token
 from app.api.v1.auth.auth_utilities import create_access_token
 
 #get_user_by_id
@@ -50,11 +50,12 @@ def delete_user(db: Session, user_id: int) -> Optional[User]:
 
 
 #login_or_register_user
-def login_or_register_user(db: Session, user_data: UserCreate) -> Tuple[UserResponse, str]:
+def login_or_register_user(db: Session, user_data: UserCreate) -> Tuple[UserResponse, Token]:
 
     db_user = get_user_by_email(db, user_data.email)
     if not db_user:
         db_user = create_user(db, user_data)
 
-    return db_user, create_access_token(subject=str(db_user.id))
+    return db_user, create_access_token(user_id=int(db_user.id))
 
+# next task auth check
