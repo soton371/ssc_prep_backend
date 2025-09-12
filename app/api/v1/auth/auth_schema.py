@@ -8,9 +8,9 @@ class UserCreate(BaseModel):
     email: EmailStr
     profile_image: Optional[str] = None
 
-class UserUpdate(BaseModel):
-    full_name: str
-    profile_image: Optional[str] = None
+# class UserUpdate(BaseModel):
+#     full_name: str
+#     profile_image: Optional[str] = None
 
 class UserResponse(UserCreate):
     id: int

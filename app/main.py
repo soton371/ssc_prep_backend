@@ -23,3 +23,4 @@ app.include_router(leaderboard_router.router)
 # alembic init alembic
 # uv run alembic revision --autogenerate -m "Initial migration"
 # uv run alembic upgrade head
+
