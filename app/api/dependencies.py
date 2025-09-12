@@ -1,11 +1,17 @@
-def getCurrentUser(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)):
-    credential_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Could not validate credential", headers={"WWW-Authenticate": "Bearer"})
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from app.api.v1.auth.auth_utilities import verifyAccessToken
+from app.api.v1.auth.auth_schema import TokenData
 
-    verifyToken = verifyAccessToken(token, credential_exception)
 
-    user=db.query(auth_model.User).filter(auth_model.User.id == verifyToken.id).first()
+bearer = HTTPBearer(auto_error=False)
 
-    if not user:
-        raise credential_exception
-    
-    return user
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer)) -> TokenData:
+    if credentials is None:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    try:
+        payload = verifyAccessToken(credentials.credentials)
+        return payload
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid token")

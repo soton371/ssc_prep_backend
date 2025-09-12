@@ -5,8 +5,9 @@ from app.api.v1.auth.auth_schema import UserCreate, UserUpdate, UserResponse, To
 from app.api.v1.auth.auth_utilities import create_access_token
 
 #get_user_by_id
-def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
-    return db.query(User).filter(User.id == user_id).first()
+def get_user_by_id(db: Session, user_id: int) -> User:
+    db_user = db.query(User).filter(User.id == user_id).first()
+    return db_user
 
 #get_user_by_email
 def get_user_by_email(db: Session, email: str) -> Optional[User]:
@@ -58,4 +59,4 @@ def login_or_register_user(db: Session, user_data: UserCreate) -> Tuple[UserResp
 
     return db_user, create_access_token(user_id=int(db_user.id))
 
-# next task auth check
+# next task auth & verify token check

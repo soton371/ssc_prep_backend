@@ -23,6 +23,12 @@ class Token(BaseModel):
     access_token: str
     token_type: Optional[str] = "bearer"
 
+    class Config:
+        from_attributes = True
+
 
 class TokenData(BaseModel):
     id: Optional[int] = None
+
+    class Config:
+        from_attributes = True

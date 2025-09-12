@@ -1,10 +1,10 @@
-from typing import Union, Dict, Any
+from typing import Dict, Any
 from sqlalchemy.orm import Session
 from app.api.v1.auth import auth_service
-from app.api.v1.auth.auth_schema import UserCreate, UserResponse
+from app.api.v1.auth.auth_schema import UserCreate, UserResponse, TokenData
 from app.db.session import get_db
 from fastapi import Depends
-
+from app.api.dependencies import get_current_user
 from fastapi import APIRouter
 
 router = APIRouter(
@@ -33,12 +33,11 @@ def login_or_register(user: UserCreate, db: Session = Depends(get_db)) -> Dict[s
         return {"error": str(e)}
 
 
-#get user by id
-@router.get("/user/{user_id}", response_model=UserResponse)
-def get_user_by_id(user_id: int, db: Session = Depends(get_db)) -> UserResponse:
-    db_user = auth_service.get_user_by_id(db, user_id)
-    if db_user is None:
-        return {"error": "User not found"}
-    return UserResponse.model_validate(db_user)
-
-#1. give auth token then get user details
+# get user
+@router.get("/user", response_model=UserResponse)
+def get_user(db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)) -> UserResponse:
+    try:
+        db_user = auth_service.get_user_by_id(db, current_user.id)
+        return UserResponse.model_validate(db_user)
+    except Exception as e:
+        return {"error": str(e)}
