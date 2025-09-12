@@ -47,3 +47,13 @@ def get_leaderboard_by_user(db: Session = Depends(get_db), current_user: TokenDa
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
+
+
+# update leaderboard entry (increment points) - only for the current user
+@router.put("/", response_model=LeaderboardResponse)
+def update_leaderboard_entry(gained_points: int, db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
+    try:
+        db_entry = leaderboard_service.update_leaderboard_entry(db, current_user.id, gained_points)
+        return db_entry
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
