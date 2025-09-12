@@ -34,8 +34,8 @@ def login_or_register(user: UserCreate, db: Session = Depends(get_db)) -> Dict[s
 
 
 # get user
-@router.get("/user", response_model=UserResponse)
-def get_user(db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)) -> UserResponse:
+@router.get("/profile", response_model=UserResponse)
+def get_profile(db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)) -> UserResponse:
     try:
         db_user = auth_service.get_user_by_id(db, current_user.id)
         return UserResponse.model_validate(db_user)
