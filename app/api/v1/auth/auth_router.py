@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from app.api.v1.auth import auth_service
 from app.api.v1.auth.auth_schema import UserCreate, UserResponse, TokenData
 from app.db.session import get_db
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from app.api.dependencies import get_current_user
 from fastapi import APIRouter
+from app.core.response import response_success
 
 router = APIRouter(
     prefix="/api/v1/auth",
@@ -18,26 +19,18 @@ router = APIRouter(
 #     return {"item_id": item_id, "q": q}
 
 
-@router.post("/login", response_model=Dict[str, Any])
+@router.post("/login")
 def login_or_register(user: UserCreate, db: Session = Depends(get_db)) -> Dict[str, Any]:
-
-    try:
-        db_user, token = auth_service.login_or_register_user(db, user)
-
-        return {
-            "data": UserResponse.model_validate(db_user).model_dump(),
-            "access_token": token.access_token,
-            "token_type": token.token_type or "bearer",
-        }
-    except Exception as e:
-        return {"error": str(e)}
+    db_user, token = auth_service.login_or_register_user(db, user)
+    return response_success(
+        data=UserResponse.model_validate(db_user).model_dump(),
+        access_token=token.access_token,
+        token_type=token.token_type or "bearer"
+    )
 
 
 # get user
-@router.get("/profile", response_model=UserResponse)
+@router.get("/profile")
 def get_profile(db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)) -> UserResponse:
-    try:
-        db_user = auth_service.get_user_by_id(db, current_user.id)
-        return UserResponse.model_validate(db_user)
-    except Exception as e:
-        return {"error": str(e)}
+    db_user = auth_service.get_user_by_id(db, current_user.id)
+    return response_success(data=UserResponse.model_validate(db_user).model_dump())

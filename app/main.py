@@ -1,10 +1,11 @@
-from typing import Union
-
+from app.core.exception_handlers import add_exception_handlers
 from fastapi import FastAPI
 from app.api.v1.auth import auth_router
 from app.api.v1.leaderboard import leaderboard_router
 
 app = FastAPI()
+
+add_exception_handlers(app)
 
 app.include_router(auth_router.router)
 app.include_router(leaderboard_router.router)
