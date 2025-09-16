@@ -14,6 +14,8 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str
 
+    GOOGLE_CLIENT_ID: str
+
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] | List[str] = []
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")

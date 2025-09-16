@@ -32,3 +32,6 @@ class TokenData(BaseModel):
 
     class Config:
         from_attributes = True
+
+class GoogleToken(BaseModel):
+    google_token: Optional[str] = None
