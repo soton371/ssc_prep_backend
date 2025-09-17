@@ -7,6 +7,13 @@ from sqlalchemy.exc import IntegrityError
 
 def add_exception_handlers(app):
 
+    @app.exception_handler(ValueError)
+    async def google_exception_handler(request: Request, exc: Exception):
+        return response_failed(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message= "Invalid credentials or token error.",
+        )
+    
     @app.exception_handler(Exception)
     async def general_exception_handler(request: Request, exc: Exception):
         return response_failed(

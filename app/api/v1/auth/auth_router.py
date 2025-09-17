@@ -20,8 +20,9 @@ router = APIRouter(
 
 # next day google sign in logic and sign up
 @router.post("/login")
-def login_or_register(user: UserCreate, db: Session = Depends(get_db)) -> Dict[str, Any]:
-    db_user, token = auth_service.login_or_register_user(db=db, user_data= user)
+def login_or_register(google_token: GoogleToken, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    db_user, token = auth_service.login_or_register_user(
+        db=db, google_token=google_token)
     return response_success(
         data=UserResponse.model_validate(db_user).model_dump(),
         access_token=token.access_token,

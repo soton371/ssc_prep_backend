@@ -34,4 +34,4 @@ class TokenData(BaseModel):
         from_attributes = True
 
 class GoogleToken(BaseModel):
-    google_token: Optional[str] = None
+    token: Optional[str] = None
