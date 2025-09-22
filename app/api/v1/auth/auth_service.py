@@ -40,14 +40,14 @@ def create_user(db: Session, user_data: UserCreate) -> User:
 # login_or_register_user
 def login_or_register_user(db: Session, google_token: GoogleToken) -> Tuple[UserResponse, Token]:
     id_info = id_token.verify_oauth2_token(
-        google_token.token, requests.Request(), settings.GOOGLE_CLIENT_ID
+        google_token.id_token, requests.Request(), settings.GOOGLE_CLIENT_ID
     )
     print(f"id_info: {id_info}")
     user_data = UserCreate(
-            full_name=id_info.get("name"),
-            email=id_info.get("email"),
-            profile_image=id_info.get("picture"),
-        )
+        full_name=id_info.get("name"),
+        email=id_info.get("email"),
+        profile_image=id_info.get("picture"),
+    )
     db_user = get_user_by_email(db, user_data.email)
     if not db_user:
         db_user = create_user(db, user_data)

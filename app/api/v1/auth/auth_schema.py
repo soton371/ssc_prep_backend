@@ -12,6 +12,7 @@ class UserCreate(BaseModel):
 #     full_name: str
 #     profile_image: Optional[str] = None
 
+
 class UserResponse(UserCreate):
     id: int
 
@@ -33,5 +34,6 @@ class TokenData(BaseModel):
     class Config:
         from_attributes = True
 
+
 class GoogleToken(BaseModel):
-    token: Optional[str] = None
+    id_token: Optional[str] = None
