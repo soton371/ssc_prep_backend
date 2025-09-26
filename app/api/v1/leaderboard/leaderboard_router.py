@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends
 from app.db.session import get_db
 from app.api.v1.leaderboard import leaderboard_service
-from app.api.v1.leaderboard.leaderboard_schema import LeaderboardResponse, LeaderboardUserResponse
+from app.api.v1.leaderboard.leaderboard_schema import LeaderboardUpdate
 from app.api.v1.auth.auth_schema import TokenData
 from app.api.dependencies import get_current_user
 from app.core.response import response_success
@@ -42,7 +42,7 @@ def get_leaderboard_by_user(db: Session = Depends(get_db), current_user: TokenDa
 
 # update leaderboard entry (increment points) - only for the current user
 @router.put("/")
-def update_leaderboard_entry(gained_points: int, db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
+def update_leaderboard_entry(gained_points: LeaderboardUpdate, db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
     db_entry = leaderboard_service.update_leaderboard_entry(
         db, current_user.id, gained_points)
     return response_success(data=db_entry)

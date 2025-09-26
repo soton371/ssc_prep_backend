@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
 from app.api.v1.leaderboard.leaderboard_model import Leaderboard
-from app.api.v1.leaderboard.leaderboard_schema import LeaderboardCreate
+from app.api.v1.leaderboard.leaderboard_schema import LeaderboardCreate, LeaderboardUpdate
 from app.core.utilities import current_month
 from typing import List
 
@@ -34,7 +34,7 @@ def get_leaderboard_for_current_month(db: Session, skip: int = 0, limit: int = 5
     return db.query(Leaderboard).options(joinedload(Leaderboard.user)).filter(Leaderboard.month == current_month()).order_by(Leaderboard.rank.asc()).offset(skip).limit(limit).all()
 
 #update leaderboard
-def update_leaderboard_entry(db: Session, user_id: int, gained_points: int) -> Leaderboard:
+def update_leaderboard_entry(db: Session, user_id: int, gained_points: LeaderboardUpdate) -> Leaderboard:
     # find existing entry for user in current month
     db_entry = db.query(Leaderboard).filter(
         Leaderboard.user_id == user_id,
@@ -43,7 +43,7 @@ def update_leaderboard_entry(db: Session, user_id: int, gained_points: int) -> L
 
     if db_entry:
         # ✅ same month → increment points
-        db_entry.points += gained_points
+        db_entry.points += gained_points.points
     else:
         # ✅ different month → create fresh entry
         # check highest rank for this month
@@ -59,7 +59,7 @@ def update_leaderboard_entry(db: Session, user_id: int, gained_points: int) -> L
 
         db_entry = Leaderboard(
             user_id=user_id,
-            points=gained_points if gained_points else 0,
+            points=gained_points.points if gained_points.points else 0,
             rank=new_rank,
             month=current_month(),
         )

@@ -7,6 +7,9 @@ class LeaderboardCreate(BaseModel):
     user_id: int
     points: int
     
+#For update points
+class LeaderboardUpdate(BaseModel):
+    points: int
 
 # For responses
 class LeaderboardResponse(BaseModel):
