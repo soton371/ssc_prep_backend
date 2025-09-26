@@ -1,4 +1,4 @@
-from app.core.exception_handlers import add_exception_handlers
+from app.core.exception_handlers import add_exception_handlers, PreventRedirectMiddleware
 from fastapi import FastAPI
 from app.api.v1.auth import auth_router
 from app.api.v1.leaderboard import leaderboard_router
@@ -14,7 +14,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Prevent Redirect Middleware
+app.add_middleware(PreventRedirectMiddleware)
 
+# Add exception handlers
 add_exception_handlers(app)
 
 app.include_router(auth_router.router)

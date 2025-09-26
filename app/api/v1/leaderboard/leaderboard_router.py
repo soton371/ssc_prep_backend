@@ -25,7 +25,7 @@ router = APIRouter(
 
 
 # for get leaderboard entries for the current month
-@router.get("/")
+@router.get("")
 def get_leaderboard_by_current_month(db: Session = Depends(get_db), skip: int = 0, limit: int = 50):
     db_entry = leaderboard_service.get_leaderboard_for_current_month(
         db=db, skip=skip, limit=limit)
@@ -41,7 +41,7 @@ def get_leaderboard_by_user(db: Session = Depends(get_db), current_user: TokenDa
 
 
 # update leaderboard entry (increment points) - only for the current user
-@router.put("/")
+@router.put("")
 def update_leaderboard_entry(gained_points: LeaderboardUpdate, db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
     db_entry = leaderboard_service.update_leaderboard_entry(
         db, current_user.id, gained_points)
